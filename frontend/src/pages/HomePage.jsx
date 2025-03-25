@@ -69,7 +69,11 @@ function HomePage() {
             <h1>{todo.title}</h1>
             <p>{todo.description}</p>
             <button onClick={() => deleteTodoHandler(todo._id)}>delete</button>
-            <button onClick={() => navigate(`/edit/${todo._id}`)}>edit</button>
+            {!todo.status && (
+              <button onClick={() => navigate(`/edit/${todo._id}`)}>
+                edit
+              </button>
+            )}
           </div>
         ))}
       </div>
