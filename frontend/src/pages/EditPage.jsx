@@ -5,6 +5,7 @@ import {
   useGetTodosQuery,
   useUpdateTodoMutation,
 } from "../slices/todoApiSlice";
+import "./EditPage.css";
 
 function EditPage() {
   const { id } = useParams();
@@ -16,9 +17,7 @@ function EditPage() {
   const navigate = useNavigate();
 
   const { data: todo, refetch } = useGetTodoByIdQuery({ id });
-
   const { data: todos, refetch: todosRefetch } = useGetTodosQuery();
-
   const [updateTodo] = useUpdateTodoMutation();
 
   const editHandler = async (e) => {
@@ -53,36 +52,34 @@ function EditPage() {
   }, [todo]);
 
   return (
-    <>
-      <div>
-        <form onSubmit={editHandler}>
-          <input
-            type="text"
-            placeholder="enter title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+    <div className="edit-container">
+      <form onSubmit={editHandler} className="edit-form">
+        <input
+          type="text"
+          placeholder="Enter title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
 
-          <textarea
-            rows={5}
-            cols={10}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="enter description"
-          ></textarea>
+        <textarea
+          rows={5}
+          cols={10}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Enter description"
+        ></textarea>
 
-          <select
-            value={status.toString()}
-            onChange={(e) => setStatus(e.target.value === "true")}
-          >
-            <option value="false">Pending</option>
-            <option value="true">Completed</option>
-          </select>
+        <select
+          value={status.toString()}
+          onChange={(e) => setStatus(e.target.value === "true")}
+        >
+          <option value="false">Pending</option>
+          <option value="true">Completed</option>
+        </select>
 
-          <button type="submit">edit</button>
-        </form>
-      </div>
-    </>
+        <button type="submit">Edit</button>
+      </form>
+    </div>
   );
 }
 

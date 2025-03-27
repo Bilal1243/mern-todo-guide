@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./HomePage.css";
 import {
   useGetTodosQuery,
@@ -8,16 +8,12 @@ import {
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
-  // let [variable,setVariable] = useState(initialValue)
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
   const { data: todos, refetch } = useGetTodosQuery();
-
   const [createTodo] = useCreateTodoMutation();
   const [deleteTodo] = useDeleteTodoMutation();
-
   const navigate = useNavigate();
 
   const createTodoHandler = async (e) => {
@@ -35,7 +31,6 @@ function HomePage() {
   const deleteTodoHandler = async (id) => {
     try {
       await deleteTodo(id).unwrap();
-
       refetch();
     } catch (error) {
       console.log(error);
@@ -43,13 +38,14 @@ function HomePage() {
   };
 
   return (
-    <>
-      <div>
+    <div className="container">
+      <div className="form-container">
         <form onSubmit={createTodoHandler}>
           <input
             type="text"
             onChange={(e) => setTitle(e.target.value)}
             value={title}
+            placeholder="Enter Title"
           />
 
           <textarea
@@ -57,29 +53,30 @@ function HomePage() {
             cols={10}
             onChange={(e) => setDescription(e.target.value)}
             value={description}
+            placeholder="Enter Description"
           ></textarea>
 
-          <button type="submit">add</button>
+          <button type="submit">Add</button>
         </form>
       </div>
 
-      <div>
-        {todos?.map((todo, index) => (
-          <div className="box">
-            
-            <h1 className={todo.status ? "completed" : null}>{todo.title}</h1>
-
-            <p>{todo.description}</p>
-            <button onClick={() => deleteTodoHandler(todo._id)}>delete</button>
-            {!todo.status && (
-              <button onClick={() => navigate(`/edit/${todo._id}`)}>
-                edit
-              </button>
-            )}
+      <div className="todos-container">
+        {todos?.map((todo) => (
+          <div className="box todo-card" key={todo._id}>
+            <h1 className={todo.status ? "completed" : "todo-title"}>{todo.title}</h1>
+            <p className="todo-description">{todo.description}</p>
+            <div className="button-group">
+              <button className="delete-btn" onClick={() => deleteTodoHandler(todo._id)}>Delete</button>
+              {!todo.status && (
+                <button className="edit-btn" onClick={() => navigate(`/edit/${todo._id}`)}>
+                  Edit
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
