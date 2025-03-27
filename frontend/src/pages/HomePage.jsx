@@ -23,7 +23,7 @@ function HomePage() {
   const createTodoHandler = async (e) => {
     e.preventDefault();
     try {
-      let response = await createTodo({ title, description });
+      await createTodo({ title, description });
       refetch();
       setTitle("");
       setDescription("");
@@ -66,7 +66,9 @@ function HomePage() {
       <div>
         {todos?.map((todo, index) => (
           <div className="box">
-            <h1>{todo.title}</h1>
+            
+            <h1 className={todo.status ? "completed" : null}>{todo.title}</h1>
+
             <p>{todo.description}</p>
             <button onClick={() => deleteTodoHandler(todo._id)}>delete</button>
             {!todo.status && (
