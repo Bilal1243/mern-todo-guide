@@ -6,6 +6,7 @@ import {
   useDeleteTodoMutation,
 } from "../slices/todoApiSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function HomePage() {
   const [title, setTitle] = useState("");
@@ -23,8 +24,10 @@ function HomePage() {
       refetch();
       setTitle("");
       setDescription("");
+      toast.success("Todo added");
     } catch (error) {
       console.log(error);
+      toast.error(error);
     }
   };
 
@@ -32,6 +35,7 @@ function HomePage() {
     try {
       await deleteTodo(id).unwrap();
       refetch();
+      toast.success("Todo Deleted");
     } catch (error) {
       console.log(error);
     }
@@ -63,12 +67,22 @@ function HomePage() {
       <div className="todos-container">
         {todos?.map((todo) => (
           <div className="box todo-card" key={todo._id}>
-            <h1 className={todo.status ? "completed" : "todo-title"}>{todo.title}</h1>
+            <h1 className={todo.status ? "completed" : "todo-title"}>
+              {todo.title}
+            </h1>
             <p className="todo-description">{todo.description}</p>
             <div className="button-group">
-              <button className="delete-btn" onClick={() => deleteTodoHandler(todo._id)}>Delete</button>
+              <button
+                className="delete-btn"
+                onClick={() => deleteTodoHandler(todo._id)}
+              >
+                Delete
+              </button>
               {!todo.status && (
-                <button className="edit-btn" onClick={() => navigate(`/edit/${todo._id}`)}>
+                <button
+                  className="edit-btn"
+                  onClick={() => navigate(`/edit/${todo._id}`)}
+                >
                   Edit
                 </button>
               )}
