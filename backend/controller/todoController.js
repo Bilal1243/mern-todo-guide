@@ -1,81 +1,54 @@
 import Todos from "../Model/todoModel.js";
+import asyncHandler from '../middlewares/asyncHandler.js'
+
+// get all todos
+const getTodos = asyncHandler(async (req, res) => {
+
+    let todos = await Todos.find()
+
+    res.json(todos)
+
+})
 
 
-const getTodos = async (req, res) => {
-    try {
+// create new todo
+const createTodo = asyncHandler(async (req, res) => {
+    let result = await Todos.create({
+        title: req.body.title,
+        description: req.body.description
+    })
 
-        let todos = await Todos.find()
-
-        res.json(todos)
-
-    } catch (error) {
-        console.log(error)
-    }
-
-}
+    res.json(result)
+})
 
 
-const createTodo = async (req, res) => {
-    try {
+// delete todo
+const deleteTodo = asyncHandler(async (req, res) => {
+    await Todos.findByIdAndDelete(req.params.id)
 
-        let result = await Todos.create({
-            title: req.body.title,
-            description: req.body.description
-        })
-
-        res.json(result)
-
-    } catch (error) {
-        console.log(error)
-    }
-}
+    res.json({ message: 'deleted' })
+})
 
 
-const deleteTodo = async (req, res) => {
-    try {
+// get one todo by id
+const getTodoById = asyncHandler(async (req, res) => {
+    const { id } = req.query
 
-        console.log(req.params)
+    let todo = await Todos.findOne({ _id: id })
 
-        await Todos.findByIdAndDelete(req.params.id)
-
-        res.json({ message: 'deleted' })
-
-    } catch (error) {
-        console.log(error)
-    }
-}
+    res.json(todo)
+})
 
 
+// update existing todo
+const updateTodo = asyncHandler(async (req, res) => {
 
-const getTodoById = async (req, res) => {
-    try {
+    let { title, description, status, id } = req.body
 
-        const { id } = req.query
+    let updatedTodo = await Todos.findByIdAndUpdate(id, { title, description, status })
 
-        let todo = await Todos.findOne({ _id: id })
-
-        res.json(todo)
-
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-
-
-const updateTodo = async (req, res) => {
-    try {
-
-        let { title, description, status, id } = req.body
-
-        let updatedTodo = await Todos.findByIdAndUpdate(id, { title, description, status })
-
-        res.json(updatedTodo)
-
-    } catch (error) {
-        console.log(error)
-    }
-}
+    res.json(updatedTodo)
+})
 
 
 export {
