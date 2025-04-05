@@ -5,6 +5,7 @@ import userRoute from './Routes/userRoutes.js'
 import cors from 'cors'
 import { errorHandler, notFound } from './middlewares/errorMiddlewares.js'
 import dotenv from 'dotenv'
+import cookieParser from 'cookie-parser'
 
 dotenv.config()
 
@@ -15,6 +16,7 @@ let port = process.env.PORT
 connectDb()
 
 
+app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

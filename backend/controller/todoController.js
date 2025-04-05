@@ -1,55 +1,62 @@
-import Todos from "../Model/todoModel.js";
+import Todos from "../Model/todoModel.js"
 import asyncHandler from '../middlewares/asyncHandler.js'
 
-// get all todos
+// Get all todos
 const getTodos = asyncHandler(async (req, res) => {
-
-    let todos = await Todos.find()
-
-    res.json(todos)
-
+    const todos = await Todos.find({ userId: req.query.userId })
+    return res.json(todos)
 })
 
-
-// create new todo
+// Create new todo
 const createTodo = asyncHandler(async (req, res) => {
-    let result = await Todos.create({
+    const result = await Todos.create({
         title: req.body.title,
-        description: req.body.description
+        description: req.body.description,
+        userId: req.body.userId
     })
 
-    res.json(result)
+    return res.status(201).json(result)
 })
 
-
-// delete todo
+// Delete todo
 const deleteTodo = asyncHandler(async (req, res) => {
-    await Todos.findByIdAndDelete(req.params.id)
+    const deleted = await Todos.findByIdAndDelete(req.params.id)
 
-    res.json({ message: 'deleted' })
+    if (!deleted) {
+        return res.status(404).json({ message: 'Todo not found' })
+    }
+
+    return res.json({ message: 'Deleted' })
 })
 
-
-// get one todo by id
+// Get one todo by ID
 const getTodoById = asyncHandler(async (req, res) => {
     const { id } = req.query
+    const todo = await Todos.findById(id)
 
-    let todo = await Todos.findOne({ _id: id })
+    if (!todo) {
+        return res.status(404).json({ message: 'Todo not found' })
+    }
 
-    res.json(todo)
+    return res.json(todo)
 })
 
-
-// update existing todo
+// Update existing todo
 const updateTodo = asyncHandler(async (req, res) => {
+    const { title, description, status, id } = req.body
 
-    let { title, description, status, id } = req.body
+    const updatedTodo = await Todos.findByIdAndUpdate(
+        id,
+        { title, description, status },
+        { new: true } // Return updated document
+    )
 
-    let updatedTodo = await Todos.findByIdAndUpdate(id, { title, description, status })
+    if (!updatedTodo) {
+        return res.status(404).json({ message: 'Todo not found' })
+    }
 
-    res.json(updatedTodo)
+    return res.json(updatedTodo)
 })
-
 
 export {
     createTodo,

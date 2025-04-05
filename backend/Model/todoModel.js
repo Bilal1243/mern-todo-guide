@@ -12,6 +12,10 @@ const todoSchema = mongoose.Schema({
     status: {
         type: Boolean,
         default: false
+    },
+    userId : {
+        type : mongoose.Types.ObjectId,
+        required : true
     }
 })
 

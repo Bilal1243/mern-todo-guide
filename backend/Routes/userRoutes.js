@@ -1,5 +1,5 @@
 import express from 'express'
-import { loginUser, registerUser } from '../controller/userController.js'
+import { loginUser, logoutUser, registerUser } from '../controller/userController.js'
 
 const userRoute = express.Router()
 
@@ -8,6 +8,9 @@ userRoute.post('/', loginUser)
 
 // register user
 userRoute.post('/register', registerUser)
+ 
+// logout user
+userRoute.get('/logout', logoutUser)
 
 
 

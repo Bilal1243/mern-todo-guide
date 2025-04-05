@@ -3,8 +3,9 @@ import { apiSlice } from "./apiSlice";
 const todoApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getTodos: builder.query({
-            query: () => ({
-                url: '/api/todos/getTodos'
+            query: (params) => ({
+                url: '/api/todos/getTodos',
+                params
             })
         }),
         createTodo: builder.mutation({
