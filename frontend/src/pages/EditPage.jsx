@@ -6,9 +6,12 @@ import {
   useUpdateTodoMutation,
 } from "../slices/todoApiSlice";
 import "./EditPage.css";
+import { useSelector } from "react-redux";
 
 function EditPage() {
   const { id } = useParams();
+
+  const { userData } = useSelector((state) => state.auth);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -17,7 +20,9 @@ function EditPage() {
   const navigate = useNavigate();
 
   const { data: todo, refetch } = useGetTodoByIdQuery({ id });
-  const { data: todos, refetch: todosRefetch } = useGetTodosQuery();
+  const { data: todos, refetch: todosRefetch } = useGetTodosQuery({
+    userId: userData._id,
+  });
   const [updateTodo] = useUpdateTodoMutation();
 
   const editHandler = async (e) => {
